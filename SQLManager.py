@@ -81,7 +81,6 @@ class SQLManager:
 	        self.con.commit()
 
 	def adddept(self, nameshort, name):
-		global deptref
 		if nameshort in self.deptref: return
 		cur = self.con.cursor()
 		data = [name, nameshort]
