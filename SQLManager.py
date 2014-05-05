@@ -71,7 +71,7 @@ class SQLManager:
 	instref = {}
 
 	def __init__(self):
-        	self.con = lite.connect("grades2.db")
+        	self.con = lite.connect("grades.db")
 	        self.con.create_function("REGEXP",2,re_fn)
 	        self.con.execute(instructors)
 	        self.con.execute(department)
@@ -90,16 +90,18 @@ class SQLManager:
 		self.deptref[nameshort] = result
 
     	def addgrades(self,cid,ap,a,am,bp,b,bm,cp,c,cm,dp,d,dm,f,w,wp,wf,i,x,y,p,s,finished,withdrawl,other,total,avggpa):
+		cur = self.con.cursor()
         	data = [cid,ap,a,am,bp,b,bm,cp,c,cm,dp,d,dm,f,w,wp,wf,i,x,y,p,s,finished,withdrawl,other,total,avggpa]
-        	self.con.execute(addgrades, data)
+        	cur.execute(addgrades, data)
 
 	def addworksin(self,did,iid):
-		self.con.execute(addworksin,[iid,did])
+		cur = self.con.cursor()
+		cur.execute(addworksin,[iid,did])
 
 	def addinstructor(self, inst):
 		if inst in self.instref: return
 		cur = self.con.cursor()
-		self.con.execute(addinstructor,[inst])
+		cur.execute(addinstructor,[inst])
 		result = cur.lastrowid
 		self.instref[inst] = result
 

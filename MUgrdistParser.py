@@ -96,7 +96,6 @@ def processfile(filename, year, semester):
 			elif t is Responses.Class:
 				skipnext = True
 				lastcid = handleclass(row,year,semester)
-				if lastcid%1000 == 0: print lastcid
 
 def __main__(argv):
 	directory = sys.argv[1]
