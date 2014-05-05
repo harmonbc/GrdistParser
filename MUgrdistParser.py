@@ -15,6 +15,14 @@ def handleDepartment(row):
 	global sql
 	sql.adddept(row[0:3],row[3:].strip())
 
+def determineCampus(section):
+	if len(section) == 1: return 'O'
+	if section[0] == 'M': return 'M'
+	if section[0] == 'H': return 'H'
+	if section[0] == 'L': return 'L'
+	if section[0] == 'V': return 'V'
+	return 'O'
+
 def handleclass(row,year,semester):
 	global sql
 	s = row[0].strip()
@@ -27,7 +35,7 @@ def handleclass(row,year,semester):
 	inst = s[0:s.find('  ')].strip()
 	title = s[s.find('  '):].strip()
 	sql.addinstructor(inst)
-	return sql.addclass(dept,s[1],num,sec,year,semester,inst,title)
+	return sql.addclass(dept,s[1],num,sec,year,semester,inst,title,determineCampus(sec))
 
 def handlegrades(row, cid):
 	global sql
@@ -91,7 +99,6 @@ def processfile(filename, year, semester):
 				if lastcid%1000 == 0: print lastcid
 
 def __main__(argv):
-	#global con
 	directory = sys.argv[1]
 	files = [f for f in listdir(directory) if isfile(join(directory,f))]
 	for f in files:

@@ -22,6 +22,7 @@ classes = """CREATE TABLE if not exists CLASS(
      did INTEGER,
      iid INTEGER,
      Honors VARCHAR,
+     campus VARCHAR,
      number INTEGER,
      Semester VARCHAR,
      Section VARCHAR,
@@ -46,14 +47,13 @@ grades = """CREATE TABLE if not exists GRADES(
      total INTEGER, avggpa DOUBLE,
      FOREIGN KEY(cid)
           REFERENCES CLASS(cid))"""
-addclass = """ INSERT INTO CLASS(did,honors, iid, number, semester, section, year, title) VALUES (?,?,?,?,?,?,?,?) """
+addclass = """ INSERT INTO CLASS(did,honors, iid, number, semester, section, year, title, campus) VALUES (?,?,?,?,?,?,?,?,?) """
 addinstructor = """ INSERT INTO INSTRUCTORS(name) VALUES (?) """
 adddepartment = """ INSERT INTO DEPARTMENTS(name, nameshort) VALUES (?,?) """
 addgrades = """ INSERT INTO GRADES(cid,ap,a,am,bp,b,bm,cp,c,cm,dp,d,dm,f,w,wp,wf,i,x,y,p,s,finished,withdrawl,other,total,avggpa) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"""
 addworksin = """INSERT INTO WORKS_IN(iid,did) VALUES (?,?) """
 checkinst = """ SELECT iid FROM INSTRUCTORS  WHERE Name LIKE ? """
 checkdept = """ SELECT did FROM DEPARTMENTS where nameshort LIKE ? """
-checkclass = """SELECT cid FROM CLASS WHERE did = ? AND iid = ? AND number = ? AND semester = ? and section LIKE ? and year = ? and title like ? """
 checkworksin = """SELECT iid,did FROM WORKS_IN WHERE iid=? AND did=? """
 enableregex = ".load /usr/lib/sqlite3/pcre.so"
 findbroken = "SELECT * FROM instructors WHERE name REGEXP '^[a-z]'"
@@ -106,12 +106,12 @@ class SQLManager:
 	def commit(self):
 		self.con.commit()
 
-	def addclass(self,dept,honors,number,section,year,semester,instructor,title):
+	def addclass(self,dept,honors,number,section,year,semester,instructor,title,campus):
 		cur = self.con.cursor()
 		iid = self.instref[instructor]
 		did = self.deptref[dept]
 
-		args = [did,honors,iid,number,semester,section,year,title]
+		args = [did,honors,iid,number,semester,section,year,title,campus]
 		cur.execute(addclass, args)	
 		cid = cur.lastrowid
 
